@@ -7,7 +7,7 @@ const CONFIG = {
     async init() {
         try {
             // In production, fetch from the secure endpoint
-            const response = await fetch('https://heroic-lamington-f62f1e.netlify.app/');
+            const response = await fetch('https://heroic-lamington-f62f1e.netlify.app/.netlify/functions/get-api-key');
             const data = await response.json();
             this.GEMINI_API_KEY = data.apiKey;
             return true;
