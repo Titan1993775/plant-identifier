@@ -40,7 +40,7 @@ const CONFIG = {
         try {
             // Replace 'YOUR_GIST_URL' with your actual gist URL
             // For example: 'https://gist.github.com/Titan1993775/532b4ef150624e01c54fee998a77820a'
-            const gistUrl = 'https://gist.github.com/Titan1993775/532b4ef150624e01c54fee998a77820a/raw/831bca9f6699d12f94fb4944f6babb2e82b7983b/gistfile1.txt';
+            const gistUrl = 'https://gist.github.com/Titan1993775/532b4ef150624e01c54fee998a77820a/raw/45765169eaae095053b0e73387c9bf05625de063/api-key.txt';
             
             const response = await fetch(gistUrl);
             
