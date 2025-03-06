@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Identifier</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Plant Identifier</h1>
+        <p class="app-subtitle">Upload a photo or use your camera to identify plants</p>
+        
+        <div class="upload-section">
+            <div class="upload-options">
+                <input type="file" id="imageUpload" accept="image/*">
+                <label for="imageUpload" class="upload-btn">
+                    <i class="fas fa-upload"></i> Upload Image
+                </label>
+                
+                <button id="cameraBtn" class="camera-btn">
+                    <i class="fas fa-camera"></i> Take Photo
+                </button>
+            </div>
+            
+            <!-- Camera interface -->
+            <div id="cameraInterface" class="camera-interface" style="display: none;">
+                <video id="cameraStream" autoplay playsinline></video>
+                <div class="camera-controls">
+                    <button id="captureBtn" class="capture-btn">
+                        <i class="fas fa-circle"></i>
+                    </button>
+                    <button id="cancelCameraBtn" class="cancel-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="image-container" id="imageContainer" style="display: none;">
+                <img id="previewImage" src="" alt="Plant Preview">
+                <div class="image-overlay" id="imageOverlay">Analyzing this plant...</div>
+            </div>
+        </div>
+
+        <div id="loadingIndicator" class="loading-container" style="display: none;">
+            <div class="spinner"></div>
+            <p>Identifying your plant...</p>
+        </div>
+
+        <div id="resultSection" class="result-section" style="display: none;">
+            <h2 id="plantName">Plant Name</h2>
+            <div id="plantDetails">
+                <p id="scientificName"></p>
+                <p id="description"></p>
+                
+                <div class="divider"></div>
+                
+                <h3>Plant Characteristics</h3>
+                <table class="plant-table">
+                    <tr>
+                        <th colspan="2">Plant Information</th>
+                    </tr>
+                    <tr>
+                        <td class="property">Water Needs</td>
+                        <td id="waterNeeds">-</td>
+                    </tr>
+                    <tr>
+                        <td class="property">Light Requirements</td>
+                        <td id="lightRequirements">-</td>
+                    </tr>
+                    <tr>
+                        <td class="property">Growth Rate</td>
+                        <td id="growthRate">-</td>
+                    </tr>
+                    <tr>
+                        <td class="property">Mature Size</td>
+                        <td id="matureSize">-</td>
+                    </tr>
+                    <tr>
+                        <td class="property">Ideal Climate</td>
+                        <td id="idealClimate">-</td>
+                    </tr>
+                </table>
+                
+                <div class="divider"></div>
+                
+                <h3>Key Facts</h3>
+                <div id="keyFacts" class="key-facts"></div>
+                
+                <div class="divider"></div>
+                
+                <h3>Care Instructions</h3>
+                <p id="careInstructions"></p>
+            </div>
+        </div>
+
+        <div id="errorSection" class="error-section" style="display: none;">
+            <p id="errorMessage">Unable to identify the plant. Please try again.</p>
+        </div>
+        
+        <canvas id="canvas" style="display: none;"></canvas>
+        
+        <footer>
+            <p>Powered by Google Gemini API</p>
+        </footer>
+    </div>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
