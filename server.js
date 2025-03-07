@@ -40,10 +40,10 @@ app.post('/api/identify-plant', async (req, res) => {
     // We need to extract just the base64 part
     const base64Data = imageData.split(',')[1];
     
-    // Forward request to Gemini API
+    // Forward request to Gemini API using the newer gemini-1.5-flash model
     const response = await axios({
       method: 'post',
-      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${apiKey}`,
+      url: `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -85,6 +85,7 @@ app.post('/api/identify-plant', async (req, res) => {
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
+      console.error('API Response Error:', error.response.data);
       return res.status(error.response.status).json({
         error: `API Error (${error.response.status}): ${error.response.data?.error?.message || error.message}`
       });

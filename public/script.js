@@ -236,13 +236,13 @@ async function fetchPlantData(imageData) {
 
         const data = await response.json();
         
-        // Enhanced error checking for the updated Gemini API structure
+        // Enhanced error checking for Gemini 1.5 API structure
         if (!data.candidates || !data.candidates.length) {
             throw new Error('No results received from AI model');
         }
 
         // Extract plant information from the response
-        // Updated to handle the new response format from Gemini Pro Vision API
+        // Updated to handle the Gemini 1.5 response format
         const plantInfo = data.candidates[0]?.content?.parts?.find(part => part.text)?.text;
         
         if (!plantInfo) {
