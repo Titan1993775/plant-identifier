@@ -12,6 +12,13 @@
         <h1>Plant Identifier</h1>
         <p class="app-subtitle">Upload a photo or use your camera to identify plants</p>
         
+        <div class="api-status">
+            <div id="apiStatusIndicator" class="api-status-indicator">
+                <i class="fas fa-circle"></i>
+                <span>Checking service status...</span>
+            </div>
+        </div>
+        
         <div class="upload-section">
             <div class="upload-options">
                 <input type="file" id="imageUpload" accept="image/*">
@@ -105,7 +112,6 @@
             <p>Powered by Google Gemini API</p>
         </footer>
     </div>
-    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

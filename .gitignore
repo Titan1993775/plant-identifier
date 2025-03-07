@@ -1,15 +1,17 @@
-# Ignore config file with API key
-config.js.backup
-
-# Ignore node_modules
-node_modules/
-
-# Ignore environment files
+# Environment variables
 .env
-.env.local
 
-# Ignore log files
-*.log
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
 
-# Ignore Netlify local folders
-.netlify/
+# Operating Systems
+.DS_Store
+Thumbs.db
+
+# IDE and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace

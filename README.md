@@ -1,12 +1,12 @@
 # Plant Identifier
 
-A web application that identifies plants from uploaded images or photos taken with your device camera. The app provides detailed information about the plant, including its scientific name, care instructions, and key facts.
+A web application that uses the Google Gemini AI API to identify plants from uploaded photos and provide detailed information about them.
 
 ## Features
 
-- Upload images of plants for identification
-- Take photos directly using your device camera
-- Get detailed plant information:
+- Upload plant images or take photos with your device camera
+- AI-powered plant identification
+- Detailed plant information including:
   - Common and scientific names
   - Plant description
   - Water and light requirements
@@ -16,41 +16,48 @@ A web application that identifies plants from uploaded images or photos taken wi
 
 ## Technologies Used
 
-- HTML, CSS, JavaScript
-- Google Gemini API for plant identification
-- Netlify Functions for secure API key management
+- Node.js & Express for the backend
+- Vanilla JavaScript for the frontend
+- Google Gemini Pro Vision API for plant identification
+- Responsive design for mobile and desktop use
 
-## Setup Instructions
+## Setup
 
 ### Prerequisites
 
-- GitHub account
-- Netlify account (free)
+- Node.js (v14 or higher)
 - Google Gemini API key
 
-### Deployment Steps
+### Installation
 
-1. Fork this repository
-2. Connect the repository to Netlify
-3. Set up environment variables in Netlify:
-   - `GEMINI_API_KEY`: Your Google Gemini API key
-4. Deploy the site
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/plant-identifier.git
+   cd plant-identifier
+   ```
 
-## Local Development
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-If you want to run this project locally:
-
-1. Clone the repository
-2. Create a `.env` file with your API key:
+3. Create a `.env` file in the root directory with your Google Gemini API key:
    ```
    GEMINI_API_KEY=your_api_key_here
+   PORT=3000
    ```
-3. Run a local server (e.g., using live-server)
 
-## Privacy and Security
+4. Start the server:
+   ```
+   npm start
+   ```
 
-This application does not store any images or data. All processing is done in real-time using the Google Gemini API, and your API key is securely stored as an environment variable.
+5. Open your browser and go to `http://localhost:3000`
+
+## Deployment
+
+This application can be deployed to platforms like Heroku, Render, or Vercel. Make sure to set up the environment variables on your hosting platform.
 
 ## License
 
-MIT License
+This project is licensed under the ISC License - see the LICENSE file for details.

@@ -20,13 +20,6 @@ const captureBtn = document.getElementById('captureBtn');
 const cancelCameraBtn = document.getElementById('cancelCameraBtn');
 const canvas = document.getElementById('canvas');
 
-// Table cell references
-const waterNeeds = document.getElementById('waterNeeds');
-const lightRequirements = document.getElementById('lightRequirements');
-const growthRate = document.getElementById('growthRate');
-const matureSize = document.getElementById('matureSize');
-const idealClimate = document.getElementById('idealClimate');
-
 // Camera stream global variable
 let stream = null;
 
@@ -36,26 +29,26 @@ const isCameraSupported = () => {
 };
 
 // Initialize the application
-async function initApp() {
-    try {
-        // Show loading state while fetching API key
-        const apiKeyLoading = document.createElement('div');
-        apiKeyLoading.className = 'loading-container';
-        apiKeyLoading.innerHTML = '<div class="spinner"></div><p>Loading application...</p>';
-        document.querySelector('.container').prepend(apiKeyLoading);
-        
-        // Initialize the configuration to get the API key
-        const success = await CONFIG.init();
-        
-        // Remove loading state
-        apiKeyLoading.remove();
-        
-        if (!success) {
-            displayErrorMessage('Failed to initialize the application. Please try again later.');
-        }
-    } catch (error) {
-        console.error('Application initialization failed:', error);
-        displayErrorMessage('Application initialization failed. Please try again later.');
+function initApp() {
+    // We don't need to fetch an API key anymore as it's handled by the server
+    // Just update the UI to show we're ready
+    updateApiStatus(true);
+}
+
+// Update API Status Indicator
+function updateApiStatus(isActive) {
+    const apiStatusIndicator = document.getElementById('apiStatusIndicator');
+    const statusIcon = apiStatusIndicator.querySelector('i');
+    const statusText = apiStatusIndicator.querySelector('span');
+    
+    if (isActive) {
+        statusIcon.className = 'fas fa-circle api-status-ok';
+        statusText.textContent = 'Ready';
+        statusText.className = 'api-status-ok';
+    } else {
+        statusIcon.className = 'fas fa-circle api-status-missing';
+        statusText.textContent = 'Service Unavailable';
+        statusText.className = 'api-status-missing';
     }
 }
 
@@ -197,12 +190,6 @@ function resetDisplay() {
 
 // Plant Identification Function with improved error handling and timeout
 async function identifyPlant(imageData) {
-    // Check if API key is available
-    if (!CONFIG.GEMINI_API_KEY) {
-        displayErrorMessage('API key not available. Please refresh the page or try again later.');
-        return;
-    }
-    
     loadingIndicator.style.display = 'block';
     imageOverlay.textContent = 'Analyzing this plant...';
     
@@ -227,57 +214,36 @@ async function identifyPlant(imageData) {
     }
 }
 
-// Separate API fetch function for better organization
+// Updated API fetch function to use our backend proxy
 async function fetchPlantData(imageData) {
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_API_KEY}`, {
+        // Send request to our backend instead of directly to Google API
+        const response = await fetch('/api/identify-plant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [
-                        { text: 'Please identify this plant with high precision. Provide a detailed response in this specific format:\n\n' +
-                               '1. Common Name: [plant name]\n' +
-                               '2. Scientific Name: [scientific name]\n' +
-                               '3. Description: [detailed description]\n' +
-                               '4. Water Needs: [low/medium/high]\n' +
-                               '5. Light Requirements: [full sun/partial shade/full shade]\n' +
-                               '6. Growth Rate: [slow/medium/fast]\n' +
-                               '7. Mature Size: [height and width]\n' +
-                               '8. Ideal Climate: [tropical/temperate/etc]\n' +
-                               '9. Key Facts: [3-5 short bullet points about unique features]\n' +
-                               '10. Care Instructions: [detailed care instructions]\n\n' +
-                               'Ensure each section is clearly labeled and informative.' },
-                        { inlineData: { 
-                            mimeType: 'image/jpeg', 
-                            data: imageData.split(',')[1] 
-                        }}
-                    ]
-                }],
-                generationConfig: {
-                    temperature: 0.4,  // Lower temperature for more accurate results
-                    maxOutputTokens: 1000
-                }
+                imageData: imageData
             })
         });
 
         // Check if response is ok
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
-            throw new Error(`API Error (${response.status}): ${errorData?.error?.message || response.statusText}`);
+            throw new Error(`API Error (${response.status}): ${errorData?.error || response.statusText}`);
         }
 
         const data = await response.json();
         
-        // Enhanced error checking
+        // Enhanced error checking for the updated Gemini API structure
         if (!data.candidates || !data.candidates.length) {
             throw new Error('No results received from AI model');
         }
 
         // Extract plant information from the response
-        const plantInfo = data.candidates[0]?.content?.parts[0]?.text;
+        // Updated to handle the new response format from Gemini Pro Vision API
+        const plantInfo = data.candidates[0]?.content?.parts?.find(part => part.text)?.text;
         
         if (!plantInfo) {
             throw new Error('No plant information found in the response');
@@ -308,6 +274,14 @@ function displayPlantInfo(info) {
     plantName.textContent = commonNameMatch ? commonNameMatch[1].trim() : 'Unknown Plant';
     scientificName.textContent = scientificNameMatch ? scientificNameMatch[1].trim() : '';
     description.textContent = descriptionMatch ? descriptionMatch[1].trim() : 'No description available';
+    
+    // Table cells
+    const waterNeeds = document.getElementById('waterNeeds');
+    const lightRequirements = document.getElementById('lightRequirements');
+    const growthRate = document.getElementById('growthRate');
+    const matureSize = document.getElementById('matureSize');
+    const idealClimate = document.getElementById('idealClimate');
+    
     waterNeeds.textContent = waterNeedsMatch ? waterNeedsMatch[1].trim() : '-';
     lightRequirements.textContent = lightRequirementsMatch ? lightRequirementsMatch[1].trim() : '-';
     growthRate.textContent = growthRateMatch ? growthRateMatch[1].trim() : '-';
@@ -384,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cameraBtn.style.display = 'none';
     }
     
-    // Initialize the application to get API key
+    // Initialize the application
     initApp();
 });
 
